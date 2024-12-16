@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "271942246701",
+    "project_id": "palenque-application-49f39",
+    "storage_bucket": "palenque-application-49f39.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:271942246701:android:d1dd66f1cd03bcbcc4f3a4",
+        "android_client_info": {
+          "package_name": "com.palenque.palenque_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBATYXMKrn2eiouGeC4hq8xYP6wf-SSrcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
