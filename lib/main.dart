@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:palenque_application/authentication/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:palenque_application/pages/hero/hero.dart';
-import 'package:palenque_application/pages/home/home.dart';
+import 'package:palenque_application/pages/auth_pages/hero.dart';
+import 'package:palenque_application/pages/service_pages/home.dart';
 
 void main() async {
   WidgetsFlutterBinding
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const Home(),
+      home: const LandingPage(),
     );
   }
 }

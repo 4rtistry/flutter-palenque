@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:palenque_application/pages/home/home.dart';
-import 'package:palenque_application/pages/login/login.dart';
+import 'package:palenque_application/pages/service_pages/home.dart';
+import 'package:palenque_application/pages/auth_pages/login.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;

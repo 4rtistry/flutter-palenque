@@ -4,8 +4,8 @@ import 'package:palenque_application/components/molecules/CustomAuthHeader.dart'
 import 'package:palenque_application/components/atoms/CustomTextButton.dart';
 import 'package:palenque_application/components/atoms/CustomTextFormField.dart';
 import 'package:palenque_application/components/molecules/CustomMediaAuthButton.dart';
-import 'package:palenque_application/pages/hero/hero.dart';
-import 'package:palenque_application/pages/login/login.dart';
+import 'package:palenque_application/pages/auth_pages/hero.dart';
+import 'package:palenque_application/pages/auth_pages/login.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});

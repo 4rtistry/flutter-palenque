@@ -41,6 +41,7 @@ dependencies:
   google_sign_in: ^6.2.2
   flutter_facebook_auth: ^7.1.1
   line_icons: ^2.0.1
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -84,8 +85,8 @@ flutter:
     - assets/svg/user-4.svg
     - assets/svg/bell-1.svg
     - assets/svg/home-2.svg
-
-    
+    - assets/svg/search-1.svg
+    - assets/svg/cart-2.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

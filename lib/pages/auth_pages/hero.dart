@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:palenque_application/components/atoms/CustomTextButton.dart';
-import 'package:palenque_application/pages/login/login.dart';
-import 'package:palenque_application/pages/register/register.dart';
+import 'package:palenque_application/pages/auth_pages/login.dart';
+import 'package:palenque_application/pages/auth_pages/register.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
