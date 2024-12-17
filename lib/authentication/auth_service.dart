@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:palenque_application/pages/service_pages/home.dart';
 import 'package:palenque_application/pages/auth_pages/login.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -17,6 +18,15 @@ class AuthService {
           .createUserWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null) {
+        await FirebaseFirestore.instance
+            .collection('users') // Firestore collection
+            .doc(userCredential
+                .user!.uid) // Use the user's UID as the document ID
+            .set({
+          'email': email,
+          'uid': userCredential.user!.uid, // Store UID for reference
+          'createdAt': Timestamp.now(), // Store current time
+        });
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const Login()));
       }

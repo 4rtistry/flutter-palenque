@@ -2,7 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:palenque_application/authentication/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:palenque_application/pages/auth_pages/login.dart';
 import 'package:palenque_application/pages/service_pages/home.dart';
+import 'package:palenque_application/pages/auth_pages/hero.dart';
 
 void main() async {
   WidgetsFlutterBinding

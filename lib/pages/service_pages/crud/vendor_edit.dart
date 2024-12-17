@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:palenque_application/authentication/auth_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:palenque_application/components/atoms/CustomTextButton.dart';
 import 'package:palenque_application/components/atoms/CustomTextFormField.dart';
 import 'package:palenque_application/components/molecules/CustomCrudButtonIcon.dart';
 import 'package:palenque_application/components/organisms/CustomAppHeader.dart';
 import 'package:palenque_application/components/organisms/CustomBottomNavBar.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:palenque_application/pages/service_pages/crud/vendor_listing.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class VendorEdit extends StatefulWidget {
-  VendorEdit({super.key});
+  final String docId; // Pass this from previous page
+  final String userId; // Logged-in user's ID
+
+  VendorEdit({super.key, required this.docId, required this.userId});
 
   @override
   State<VendorEdit> createState() => _VendorEditState();
@@ -18,55 +21,65 @@ class VendorEdit extends StatefulWidget {
 class _VendorEditState extends State<VendorEdit> {
   final _formKey = GlobalKey<FormState>();
 
-  TextEditingController searchFormController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController locationController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  bool _isSubmitted = false;
-  String? _docId;
+  bool _isLoading = true; // For loading state
 
-  int currentIndex = 0;
-
-  void onNavBarItemTapped(int index) {
-    setState(() {
-      currentIndex = index; // Update the selected index
-    });
+  @override
+  void initState() {
+    super.initState();
+    _fetchVendorData();
   }
 
-  Future<void> _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      // Prepare data
-      Map<String, dynamic> vendorData = {
-        "name": nameController.text.trim(),
-        "location": locationController.text.trim(),
-        "phone": phoneController.text.trim(),
-        "email": "sample@email.com", // Replace with dynamic email if needed
-        "createdAt": FieldValue.serverTimestamp(), // Firestore server timestamp
-      };
+  // Fetch vendor data from Firestore
+  Future<void> _fetchVendorData() async {
+    try {
+      DocumentSnapshot doc = await _firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('vendors')
+          .doc(widget.docId)
+          .get();
 
-      try {
-        // Add a new document to the "Vendors" collection
-        DocumentReference docRef =
-            await _firestore.collection("vendors").add(vendorData);
-
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
         setState(() {
-          _isSubmitted = true; // Mark form as submitted
-          _docId = docRef.id; // Save the document ID
+          nameController.text = data['name'] ?? '';
+          locationController.text = data['location'] ?? '';
+          phoneController.text = data['phone'] ?? '';
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
+  // Save updated data to Firestore
+  Future<void> _saveVendorData() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        await _firestore
+            .collection('users')
+            .doc(widget.userId)
+            .collection('vendors')
+            .doc(widget.docId)
+            .update({
+          'name': nameController.text.trim(),
+          'location': locationController.text.trim(),
+          'phone': phoneController.text.trim(),
         });
 
-        // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Vendor added successfully! Document ID: $_docId')),
+          const SnackBar(content: Text('Vendor details updated successfully')),
         );
+        Navigator.pop(context); // Go back after saving
       } catch (e) {
-        // Handle errors
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${e.toString()}')),
-        );
+        print('Error updating vendor: $e');
       }
     }
   }
@@ -75,110 +88,95 @@ class _VendorEditState extends State<VendorEdit> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Column(
-        children: [
-          CustomAppHeader(
-            searchFormController:
-                searchFormController, // Pass the controller for the search bar
-          ),
-          // Your other contents here
-          Container(
-            margin: const EdgeInsets.only(top: 15),
-            child: Center(
-              child: SizedBox(
-                width: 350,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Manage Vendor Details',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontFamily: 'Poppins',
-                              fontWeight: FontWeight.w600),
-                        ),
-                        CustomCrudButtonIcon(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => VendorListing()));
-                            },
-                            label: 'Go Back',
-                            icon: Icons.arrow_back)
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          CustomTextFormField(
-                            controller: nameController,
-                            labelText: 'Vendor Name',
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Please enter vendor name';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextFormField(
-                            controller: locationController,
-                            labelText: 'Location',
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Please enter location';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextFormField(
-                            controller: phoneController,
-                            labelText: 'Phone',
-                            validator: (value) {
-                              if (value == null || value.trim().isEmpty) {
-                                return 'Please enter phone number';
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 30),
-                          Container(
-                            child: CustomTextButton(
-                              onPressed: _submitForm,
-                              text: 'Save Changes',
-                              width: double.infinity,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator()) // Loading state
+          : SingleChildScrollView(
+            child: Column(
+                children: [
+                  CustomAppHeader(
+                    searchFormController: TextEditingController(),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(top: 15),
+                    child: Center(
+                      child: SizedBox(
+                        width: 350,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Manage Vendor Details',
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontFamily: 'Poppins',
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                CustomCrudButtonIcon(
+                                  onPressed: () {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                VendorListing()));
+                                  },
+                                  label: 'Go Back',
+                                  icon: Icons.arrow_back,
+                                )
+                              ],
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          CustomTextButton(
-                            onPressed: () {},
-                            text: 'Remove Vendor Account',
-                            width: double.infinity,
-                            variant: ButtonVariant.outlined,
-                          ),
-                        ],
+                            const SizedBox(height: 20),
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  CustomTextFormField(
+                                    controller: nameController,
+                                    labelText: 'Vendor Name',
+                                    validator: (value) => value!.isEmpty
+                                        ? 'Enter vendor name'
+                                        : null,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomTextFormField(
+                                    controller: locationController,
+                                    labelText: 'Location',
+                                    validator: (value) =>
+                                        value!.isEmpty ? 'Enter location' : null,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomTextFormField(
+                                    controller: phoneController,
+                                    labelText: 'Phone',
+                                    validator: (value) => value!.isEmpty
+                                        ? 'Enter phone number'
+                                        : null,
+                                  ),
+                                  const SizedBox(height: 30),
+                                  CustomTextButton(
+                                    onPressed: _saveVendorData,
+                                    text: 'Save Changes',
+                                    width: double.infinity,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  CustomTextButton(
+                                    onPressed: () {},
+                                    text: 'Remove Vendor Account',
+                                    width: double.infinity,
+                                    variant: ButtonVariant.outlined,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ),
           ),
-        ],
-      ),
-      bottomNavigationBar: CustomBottomNavBar(
-        currentIndex: currentIndex,
-        onTap:
-            onNavBarItemTapped, // Pass the callback function to update the index
-      ),
     );
   }
 }
