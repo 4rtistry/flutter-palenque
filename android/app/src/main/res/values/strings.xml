@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="app_name">Palenque</string>
+<string name="facebook_app_id">562932696351732</string>
+<string name="fb_login_protocol_scheme">fb562932696351732</string>
+<string name="facebook_client_token">b9b4bc91c939aaf567e2abf7d8a34742</string>
+</resources>
+

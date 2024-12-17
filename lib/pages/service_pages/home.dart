@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:palenque_application/authentication/auth_service.dart';
 import 'package:palenque_application/components/atoms/CustomTextButton.dart';
 import 'package:palenque_application/components/organisms/CustomAppHeader.dart';
 import 'package:palenque_application/components/organisms/CustomBottomNavBar.dart';
+import 'package:palenque_application/pages/service_pages/crud/vendor_listing.dart';
 // import 'package:carousel_slider/carousel_slider.dart';
 
 class Home extends StatefulWidget {
@@ -28,7 +27,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F5F5),
       body: Column(
         children: [
           CustomAppHeader(
@@ -62,8 +61,11 @@ class _HomeState extends State<Home> {
                       height: 20,
                     ),
                     CustomTextButton(
-                      onPressed: () {},
-                      text: 'Add Product',
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VendorListing()));
+                      },
+                      text: 'Add Vendors',
                       width: double.infinity,
                       variant: ButtonVariant.outlined,
                     )

@@ -179,7 +179,9 @@ class _RegisterState extends State<Register> {
                   CustomMediaAuthButton(
                       svgPath: 'assets/svg/FacebookSVG.svg',
                       text: 'Continue with Facebook',
-                      onPressed: () {}),
+                      onPressed: () {
+                        AuthService().signInWithFacebook();
+                      }),
                   const SizedBox(
                     height: 145,
                   ),

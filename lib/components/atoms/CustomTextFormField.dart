@@ -19,6 +19,7 @@ class CustomTextFormField extends StatelessWidget {
   final double? iconSize;
   final Color? iconColor;
   final TextCapitalization textCapitalization;
+  final bool enabled; // <-- Added this parameter to control enabled state
 
   const CustomTextFormField({
     super.key,
@@ -41,6 +42,7 @@ class CustomTextFormField extends StatelessWidget {
     this.iconSize = 20.0,
     this.iconColor = const Color(0xFF9E9E9E),
     this.textCapitalization = TextCapitalization.none,
+    this.enabled = true, // <-- Default enabled state is true
   });
 
   @override
@@ -50,6 +52,7 @@ class CustomTextFormField extends StatelessWidget {
       obscureText: obscureText,
       keyboardType: keyboardType,
       textCapitalization: textCapitalization,
+      enabled: enabled, // <-- Make the field disabled if false
       decoration: InputDecoration(
         labelText: labelText,
         fillColor: fillColor,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:palenque_application/authentication/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:palenque_application/pages/auth_pages/hero.dart';
+import 'package:palenque_application/pages/service_pages/crud/vendor_listing.dart';
 import 'package:palenque_application/pages/service_pages/home.dart';
 
 void main() async {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      home: const LandingPage(),
+      home: const Home(),
     );
   }
 }

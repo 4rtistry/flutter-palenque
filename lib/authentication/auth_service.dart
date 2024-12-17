@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:palenque_application/pages/service_pages/home.dart';
 import 'package:palenque_application/pages/auth_pages/login.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class AuthService {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -28,12 +29,10 @@ class AuthService {
   Future<void> signInWithEmailAndPassword(
       BuildContext context, String email, String password) async {
     try {
-      // Sign in the user using Firebase Authentication
       final UserCredential userCredential = await _firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
 
       if (userCredential.user != null) {
-        // Navigate to the home page upon successful login
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => const Home()));
       }
@@ -50,7 +49,7 @@ class AuthService {
       final GoogleSignInAccount? gUser = await _googleSignIn.signIn();
 
       if (gUser == null) {
-        return; // The user canceled the sign-in process
+        return;
       }
 
       final GoogleSignInAuthentication gAuth = await gUser.authentication;
@@ -72,6 +71,37 @@ class AuthService {
     }
   }
 
+  // Facebook Sign In
+
+  Future<UserCredential?> signInWithFacebook() async {
+    try {
+      // Sign out from Firebase
+      await FirebaseAuth.instance.signOut();
+
+      // Log out from Facebook to clear any previous session
+      await FacebookAuth.instance.logOut();
+
+      // Trigger the sign-in flow
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+
+      if (loginResult.status == LoginStatus.success) {
+        final OAuthCredential facebookAuthCredential =
+            FacebookAuthProvider.credential(
+                loginResult.accessToken!.tokenString);
+        return await FirebaseAuth.instance
+            .signInWithCredential(facebookAuthCredential);
+      } else if (loginResult.status == LoginStatus.cancelled) {
+        print('Facebook login was canceled by the user.');
+      } else {
+        print('Facebook login failed with status: ${loginResult.status}');
+      }
+    } catch (e) {
+      print('An error occurred during Facebook login: $e');
+    }
+
+    return null;
+  }
+
   // Auth Sign-Out
   Future<void> signOut(BuildContext context) async {
     try {
@@ -89,7 +119,6 @@ class AuthService {
   void _handleError(BuildContext context, Object error) {
     String message;
 
-    // Customize error messages based on Firebase exceptions
     if (error is FirebaseAuthException) {
       switch (error.code) {
         case 'email-already-in-use':
