@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:palenque_application/authentication/auth_service.dart';
 import 'package:palenque_application/components/atoms/CustomTextButton.dart';
 import 'package:palenque_application/components/atoms/CustomTextFormField.dart';
+import 'package:palenque_application/components/molecules/CustomCrudButtonIcon.dart';
 import 'package:palenque_application/components/organisms/CustomAppHeader.dart';
 import 'package:palenque_application/components/organisms/CustomBottomNavBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -92,20 +93,25 @@ class _VendorEditState extends State<VendorEdit> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Vendor Edit',
+                          'Manage Vendor Details',
                           style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w600),
                         ),
-                        TextButton(
+                        CustomCrudButtonIcon(
                             onPressed: () {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.push(
+                                  context,
                                   MaterialPageRoute(
                                       builder: (context) => VendorListing()));
                             },
-                            child: Text('Back')),
+                            label: 'Go Back',
+                            icon: Icons.arrow_back)
                       ],
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     Form(
                       key: _formKey,
@@ -154,8 +160,9 @@ class _VendorEditState extends State<VendorEdit> {
                           const SizedBox(height: 20),
                           CustomTextButton(
                             onPressed: () {},
-                            text: 'Delete Vendor Account',
+                            text: 'Remove Vendor Account',
                             width: double.infinity,
+                            variant: ButtonVariant.outlined,
                           ),
                         ],
                       ),

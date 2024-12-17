@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:palenque_application/authentication/auth_service.dart';
 import 'package:palenque_application/components/atoms/CustomCrudButton.dart';
 import 'package:palenque_application/components/atoms/CustomTextFormField.dart';
+import 'package:palenque_application/components/molecules/CustomCrudButtonIcon.dart';
 import 'package:palenque_application/components/organisms/CustomAppHeader.dart';
 import 'package:palenque_application/components/organisms/CustomBottomNavBar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -136,20 +137,25 @@ class _VendorListingState extends State<VendorListing> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Vendor Listing',
+                          'Register Your Vendor',
                           style: TextStyle(
                               fontSize: 18,
                               fontFamily: 'Poppins',
                               fontWeight: FontWeight.w600),
                         ),
-                        TextButton(
+                        CustomCrudButtonIcon(
                             onPressed: () {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.push(
+                                  context,
                                   MaterialPageRoute(
                                       builder: (context) => VendorEdit()));
                             },
-                            child: Text('Edit')),
+                            label: 'Edit',
+                            icon: Icons.edit)
                       ],
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     Form(
                       key: _formKey,

@@ -15,7 +15,7 @@ class CustomAppHeader extends StatelessWidget {
     return Column(
       children: [
         AppBar(
-          backgroundColor: const Color(0xFFF16B44),
+          backgroundColor: const Color(0xFFE64A19),
           automaticallyImplyLeading: false,
           title: Center(
             child: SizedBox(
@@ -58,7 +58,7 @@ class CustomAppHeader extends StatelessWidget {
           ),
         ),
         Container(
-          color: const Color(0xFFF16B44),
+          color: const Color(0xFFE64A19),
           width: double.infinity,
           child: Center(
             child: SizedBox(

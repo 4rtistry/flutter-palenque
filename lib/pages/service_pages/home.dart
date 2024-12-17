@@ -31,12 +31,10 @@ class _HomeState extends State<Home> {
       body: Column(
         children: [
           CustomAppHeader(
-            searchFormController:
-                searchFormController, // Pass the controller for the search bar
+            searchFormController: searchFormController,
           ),
-          // Your other contents here
           Container(
-            margin: const EdgeInsets.only(top: 15),
+            margin: const EdgeInsets.only(top: 250),
             child: Center(
               child: SizedBox(
                 width: 350,
@@ -51,24 +49,24 @@ class _HomeState extends State<Home> {
                     // ),
                     CustomTextButton(
                       onPressed: () {
-                        AuthService().signOut(context);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => VendorListing()));
                       },
-                      text: 'Temporary Sign Out',
+                      text: 'Become a Partner',
                       width: double.infinity,
-                      variant: ButtonVariant.outlined,
+                      variant: ButtonVariant.filled,
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     CustomTextButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => VendorListing()));
+                        AuthService().signOut(context);
                       },
-                      text: 'Add Vendors',
+                      text: 'Sign Out (Temporary)',
                       width: double.infinity,
                       variant: ButtonVariant.outlined,
-                    )
+                    ),
                   ],
                 ),
               ),
