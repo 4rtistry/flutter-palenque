@@ -28,51 +28,53 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: Column(
-        children: [
-          CustomAppHeader(
-            searchFormController: searchFormController,
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 250),
-            child: Center(
-              child: SizedBox(
-                width: 350,
-                child: Column(
-                  children: [
-                    // Text(
-                    //   'Product Categories',
-                    //   style: TextStyle(
-                    //       fontSize: 18,
-                    //       fontFamily: 'Poppins',
-                    //       fontWeight: FontWeight.w600),
-                    // ),
-                    CustomTextButton(
-                      onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => VendorListing()));
-                      },
-                      text: 'Become a Partner',
-                      width: double.infinity,
-                      variant: ButtonVariant.filled,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CustomTextButton(
-                      onPressed: () {
-                        AuthService().signOut(context);
-                      },
-                      text: 'Sign Out (Temporary)',
-                      width: double.infinity,
-                      variant: ButtonVariant.outlined,
-                    ),
-                  ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            CustomAppHeader(
+              searchFormController: searchFormController,
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 250),
+              child: Center(
+                child: SizedBox(
+                  width: 350,
+                  child: Column(
+                    children: [
+                      // Text(
+                      //   'Product Categories',
+                      //   style: TextStyle(
+                      //       fontSize: 18,
+                      //       fontFamily: 'Poppins',
+                      //       fontWeight: FontWeight.w600),
+                      // ),
+                      CustomTextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => VendorListing()));
+                        },
+                        text: 'Become a Partner',
+                        width: double.infinity,
+                        variant: ButtonVariant.filled,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      CustomTextButton(
+                        onPressed: () {
+                          AuthService().signOut(context);
+                        },
+                        text: 'Sign Out (Temporary)',
+                        width: double.infinity,
+                        variant: ButtonVariant.outlined,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: CustomBottomNavBar(
         currentIndex: currentIndex,

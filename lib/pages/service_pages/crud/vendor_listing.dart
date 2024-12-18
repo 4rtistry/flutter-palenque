@@ -208,14 +208,14 @@ class _VendorListingState extends State<VendorListing> {
                                       : () async {
                                           await _submitForm();
                                         },
-                                  text: _isSubmitted ? 'Submitted' : 'Submit',
+                                  text: _isSubmitted ? 'Registered' : 'Submit',
                                   width: double.infinity,
                                 ),
-                                if (_docId != null) ...[
-                                  const SizedBox(height: 20),
-                                  Text('Document ID: $_docId',
-                                      style: TextStyle(color: Colors.green)),
-                                ],
+                                // if (_docId != null) ...[
+                                //   const SizedBox(height: 20),
+                                //   Text('Document ID: $_docId',
+                                //       style: TextStyle(color: Colors.green)),
+                                // ],
                               ],
                             ),
                           )

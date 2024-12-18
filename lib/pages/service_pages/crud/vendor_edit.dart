@@ -7,6 +7,7 @@ import 'package:palenque_application/components/organisms/CustomAppHeader.dart';
 import 'package:palenque_application/components/organisms/CustomBottomNavBar.dart';
 import 'package:palenque_application/pages/service_pages/crud/vendor_listing.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:palenque_application/pages/service_pages/home.dart';
 
 class VendorEdit extends StatefulWidget {
   final String docId; // Pass this from previous page
@@ -77,10 +78,61 @@ class _VendorEditState extends State<VendorEdit> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Vendor details updated successfully')),
         );
-        Navigator.pop(context); // Go back after saving
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => VendorListing()),
+        );
       } catch (e) {
         print('Error updating vendor: $e');
       }
+    }
+  }
+
+  Future<bool> _showDeleteConfirmationDialog() async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Delete Vendor Account'),
+            content: const Text(
+                'Are you sure you want to delete this vendor account? This action cannot be undone.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false), // Cancel
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true), // Confirm
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // Return false if dialog is dismissed
+  }
+
+  Future<void> _deleteVendorData() async {
+    try {
+      await _firestore
+          .collection('users')
+          .doc(widget.userId)
+          .collection('vendors')
+          .doc(widget.docId)
+          .delete();
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Vendor account deleted successfully')),
+      );
+
+      // Navigate back to VendorListing
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Home()),
+      );
+    } catch (e) {
+      print('Error deleting vendor: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Failed to delete vendor account')),
+      );
     }
   }
 
@@ -91,7 +143,7 @@ class _VendorEditState extends State<VendorEdit> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator()) // Loading state
           : SingleChildScrollView(
-            child: Column(
+              child: Column(
                 children: [
                   CustomAppHeader(
                     searchFormController: TextEditingController(),
@@ -142,8 +194,9 @@ class _VendorEditState extends State<VendorEdit> {
                                   CustomTextFormField(
                                     controller: locationController,
                                     labelText: 'Location',
-                                    validator: (value) =>
-                                        value!.isEmpty ? 'Enter location' : null,
+                                    validator: (value) => value!.isEmpty
+                                        ? 'Enter location'
+                                        : null,
                                   ),
                                   const SizedBox(height: 20),
                                   CustomTextFormField(
@@ -161,7 +214,13 @@ class _VendorEditState extends State<VendorEdit> {
                                   ),
                                   const SizedBox(height: 20),
                                   CustomTextButton(
-                                    onPressed: () {},
+                                    onPressed: () async {
+                                      bool confirmDelete =
+                                          await _showDeleteConfirmationDialog();
+                                      if (confirmDelete) {
+                                        await _deleteVendorData();
+                                      }
+                                    },
                                     text: 'Remove Vendor Account',
                                     width: double.infinity,
                                     variant: ButtonVariant.outlined,
@@ -176,7 +235,7 @@ class _VendorEditState extends State<VendorEdit> {
                   ),
                 ],
               ),
-          ),
+            ),
     );
   }
 }

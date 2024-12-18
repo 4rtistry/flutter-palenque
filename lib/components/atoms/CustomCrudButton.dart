@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 enum ButtonVariant { filled, outlined } // Add button variants
 
 class CustomCrudButton extends StatelessWidget {
-  final Future<void> Function()?
-      onPressed; // Changed to Future<void> Function()?
+  final Future<void> Function()? onPressed; // Allows an async function
   final String text;
   final Color backgroundColor;
   final Color textColor;
@@ -17,7 +16,7 @@ class CustomCrudButton extends StatelessWidget {
 
   const CustomCrudButton({
     super.key,
-    this.onPressed, // Now allows an async function
+    this.onPressed,
     required this.text,
     this.backgroundColor = const Color(0xFFE64A19),
     this.textColor = Colors.white,
@@ -32,18 +31,33 @@ class CustomCrudButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isOutlined = variant == ButtonVariant.outlined;
+    final bool isDisabled =
+        onPressed == null; // Check if the button is disabled
+
+    // Determine colors based on the button's state
+    final Color effectiveBackgroundColor = isDisabled
+        ? Colors.grey // Grey background when disabled
+        : (isOutlined ? Colors.transparent : backgroundColor);
+
+    final Color effectiveTextColor = isDisabled
+        ? Colors.white // White text when disabled
+        : (isOutlined ? borderColor : textColor);
+
+    final BorderSide effectiveBorderSide = isDisabled
+        ? BorderSide(color: Colors.grey) // Grey border when disabled
+        : (isOutlined
+            ? BorderSide(color: borderColor, width: 1.5)
+            : BorderSide.none);
 
     return SizedBox(
       width: width,
       child: TextButton(
         onPressed: onPressed, // Accepts async function
         style: TextButton.styleFrom(
-          backgroundColor: isOutlined ? Colors.transparent : backgroundColor,
+          backgroundColor: effectiveBackgroundColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
-            side: isOutlined
-                ? BorderSide(color: borderColor, width: 1.5)
-                : BorderSide.none,
+            side: effectiveBorderSide,
           ),
           padding: padding,
         ),
@@ -54,7 +68,7 @@ class CustomCrudButton extends StatelessWidget {
                 fontSize: 14.0,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w600,
-                color: isOutlined ? borderColor : textColor,
+                color: effectiveTextColor,
               ),
         ),
       ),

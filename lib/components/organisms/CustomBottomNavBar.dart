@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:palenque_application/pages/service_pages/home.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   final int currentIndex;
@@ -16,6 +17,15 @@ class CustomBottomNavBar extends StatefulWidget {
 }
 
 class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
+  void _handleNavigation(int index) {
+    widget.onTap(index); // Update the selected index
+    if (index == 0) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const Home()));
+    }
+    // Add more navigation logic for other items if needed
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -26,7 +36,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
       child: BottomNavigationBar(
         backgroundColor: Colors.white,
         currentIndex: widget.currentIndex,
-        onTap: widget.onTap,
+        onTap: _handleNavigation, // Call the navigation handler
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.blue,
         selectedLabelStyle:
